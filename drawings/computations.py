@@ -4,6 +4,8 @@ from types import SimpleNamespace
 delta = 320
 x_corner = 3887
 x_lamp = 1452
+left_x_corner = 4049
+#%%
 k = (x_lamp - delta/2 ) // delta
 k = int(k)
 print("noof steps before lamp", k)
@@ -45,6 +47,10 @@ class Rail:
     @property
     def holes_vertical_from_start(self):
         return list(np.array(self.holes_vertical_from_wall) - self.start)
+    
+    @property
+    def n_tubes(self):
+        return len(self.tubes_from_wall)
         
 #%%
 L1 = Rail(
@@ -63,15 +69,23 @@ L1.tubes_from_start
 L2.tubes_from_start
 #%%
 for L in L1, L2:
-    tw = L.tubes_from_wall 
+    tw = L.tubes_from_wall
+    middle_i = int((len(tw) - 1) / 2)
     L.holes_vertical_from_wall = [
-        (tw[0] + tw[1])/2, 
+        (tw[0] + tw[1])/2,
+        (tw[middle_i] + tw[middle_i + 1])/2,
         (tw[-1] + tw[-2])/2
+        
     ]
     
 #%%
+holes = L1.holes_vertical_from_wall + L2.holes_vertical_from_wall
+print("Holes on the wall:", holes)
 
-print("Holes on the wall:", L1.holes_vertical_from_wall + L2.holes_vertical_from_wall)
 
-
-
+#%%
+print("L-profiles to buy")
+print(f"2 x {L1.length}")
+left_overlap = left_x_corner - x_corner - 20
+print(f"2 x {L2.length}")
+#print(f"1 x {L2.length + left_overlap}")
